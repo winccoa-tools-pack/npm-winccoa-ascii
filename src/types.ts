@@ -59,6 +59,14 @@ export interface AsciiBaseOptions {
      * @default 120000
      */
     timeout?: number;
+
+    /**
+     * Run in standalone mode without connecting to Data/Event managers (`-n` flag).
+     * In SQLite projects WCCOAasciiSQLite can read and write the sqlite database
+     * files directly, so this allows import/export without any running managers.
+     * @default false
+     */
+    standalone?: boolean;
 }
 
 // ── Import ────────────────────────────────────────────────────────────────────

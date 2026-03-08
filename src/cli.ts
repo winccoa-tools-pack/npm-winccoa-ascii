@@ -49,6 +49,7 @@ function printImportUsage(): void {
             '      --data <host[:port]>    Data server address',
             '      --event <host[:port]>   Event server address',
             '  -t, --timeout <ms>          Process timeout in milliseconds (default: 120000)',
+            '      --standalone            Run without Data/Event connection (-n, SQLite only)',
             '  -h, --help                  Show this help message',
             '',
             'Options (import):',
@@ -89,6 +90,7 @@ function printExportUsage(): void {
             '      --data <host[:port]>    Data server address',
             '      --event <host[:port]>   Event server address',
             '  -t, --timeout <ms>          Process timeout in milliseconds (default: 120000)',
+            '      --standalone            Run without Data/Event connection (-n, SQLite only)',
             '  -h, --help                  Show this help message',
             '',
             'Options (export):',
@@ -125,6 +127,7 @@ interface ParsedImportArgs {
     dataServer?: string;
     eventServer?: string;
     timeout?: number;
+    standalone: boolean;
     commitCount?: number;
     typesAction?: 'yes' | 'no';
     cnsAction?: 'yes' | 'no';
@@ -145,6 +148,7 @@ interface ParsedExportArgs {
     dataServer?: string;
     eventServer?: string;
     timeout?: number;
+    standalone: boolean;
     filter?: string;
     filterDp: string[];
     filterDpType: string[];
@@ -175,7 +179,9 @@ export function parseArgs(argv: string[]): ParsedArgs | null {
 
     const command = args[0];
     if (command !== 'import' && command !== 'export') {
-        process.stderr.write(`Error: Unknown command "${command}". Expected "import" or "export".\n`);
+        process.stderr.write(
+            `Error: Unknown command "${command}". Expected "import" or "export".\n`,
+        );
         return null;
     }
 
@@ -199,6 +205,7 @@ export function parseArgs(argv: string[]): ParsedArgs | null {
     let dataServer: string | undefined;
     let eventServer: string | undefined;
     let timeout: number | undefined;
+    let standalone = false;
 
     // Import-specific
     let commitCount: number | undefined;
@@ -298,7 +305,9 @@ export function parseArgs(argv: string[]): ParsedArgs | null {
                     return null;
                 }
                 if (typesAction === 'no') {
-                    process.stderr.write('Error: --types-yes and --types-no are mutually exclusive.\n');
+                    process.stderr.write(
+                        'Error: --types-yes and --types-no are mutually exclusive.\n',
+                    );
                     return null;
                 }
                 typesAction = 'yes';
@@ -309,7 +318,9 @@ export function parseArgs(argv: string[]): ParsedArgs | null {
                     return null;
                 }
                 if (typesAction === 'yes') {
-                    process.stderr.write('Error: --types-yes and --types-no are mutually exclusive.\n');
+                    process.stderr.write(
+                        'Error: --types-yes and --types-no are mutually exclusive.\n',
+                    );
                     return null;
                 }
                 typesAction = 'no';
@@ -438,6 +449,9 @@ export function parseArgs(argv: string[]): ParsedArgs | null {
                 }
                 exportTimestamp = true;
                 break;
+            case '--standalone':
+                standalone = true;
+                break;
 
             default:
                 process.stderr.write(`Error: Unknown option "${flag}".\n`);
@@ -471,6 +485,7 @@ export function parseArgs(argv: string[]): ParsedArgs | null {
             dataServer,
             eventServer,
             timeout,
+            standalone,
             commitCount,
             typesAction,
             cnsAction,
@@ -492,6 +507,7 @@ export function parseArgs(argv: string[]): ParsedArgs | null {
         dataServer,
         eventServer,
         timeout,
+        standalone,
         filter,
         filterDp,
         filterDpType,
@@ -563,6 +579,7 @@ export async function main(): Promise<void> {
                 dataServer: parsed.dataServer,
                 eventServer: parsed.eventServer,
                 timeout: parsed.timeout,
+                standalone: parsed.standalone || undefined,
                 commitCount: parsed.commitCount,
                 typesAction: parsed.typesAction,
                 cnsAction: parsed.cnsAction,
@@ -597,6 +614,7 @@ export async function main(): Promise<void> {
                 dataServer: parsed.dataServer,
                 eventServer: parsed.eventServer,
                 timeout: parsed.timeout,
+                standalone: parsed.standalone || undefined,
                 filter: parsed.filter,
                 filterDp: parsed.filterDp.length > 0 ? parsed.filterDp : undefined,
                 filterDpType: parsed.filterDpType.length > 0 ? parsed.filterDpType : undefined,

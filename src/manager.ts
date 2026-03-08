@@ -60,6 +60,20 @@ export class AsciiManager {
     }
 
     /**
+     * Returns `true` when the `WCCOAasciiSQLite` executable exists for the given version.
+     *
+     * @param version - WinCC OA version string (e.g., '3.21')
+     */
+    exists(version: string): boolean {
+        try {
+            this.ascii.setVersion(version);
+            return this.ascii.exists();
+        } catch {
+            return false;
+        }
+    }
+
+    /**
      * Build args shared by both import and export operations.
      */
     private buildBaseArgs(options: AsciiBaseOptions): string[] {
@@ -89,6 +103,9 @@ export class AsciiManager {
         }
         if (options.eventServer) {
             args.push('-event', options.eventServer);
+        }
+        if (options.standalone) {
+            args.push('-n');
         }
 
         return args;

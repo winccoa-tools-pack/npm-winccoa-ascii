@@ -1,0 +1,23 @@
+# Runtime / log files
+log/
+
+# SQLite WAL auxiliary files (process-local, must not be committed)
+db/wincc_oa/sqlite/*.sqlite-shm
+db/wincc_oa/sqlite/*.sqlite-wal
+
+# NGA / InfluxDB archive directories (large, runtime-generated)
+db/wincc_oa/nga/
+db/wincc_oa/influx/
+
+# Auto-generated SSL certificates and private keys
+config/certificate.pem
+config/driver_private.key
+config/host-cert.pem
+config/host-key.pem
+config/root-cert.pem
+
+# InfluxDB config (not needed for SQLite-only fixture)
+config/influxdb.conf
+
+# Other volatile runtime dirs
+source/
