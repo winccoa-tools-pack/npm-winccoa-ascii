@@ -94,6 +94,77 @@ describe('AsciiManager – DPL import/export integration', { concurrency: false 
         assert.match(content, /IntegTestDp2/, 'IntegTestDp2 missing from export');
     });
 
+    it('exports single DP using filterDp', async (t) => {
+        if (!handle) { t.skip(skipReason ?? 'fixture project not available'); return; }
+
+        const outPath = path.join(handle.projectDir, 'log', 'export-filter-dp.dpl');
+        const result = await exportDpl({
+            version: handle.version,
+            projectName: handle.projectName,
+            outputPath: outPath,
+            filterDp: ['IntegTestDp1'],
+            managerNumber: MGR_NUM_EXPORT,
+        });
+
+        assert.equal(result.exitCode, 0, `export failed:\n${result.stderr}`);
+        assert.ok(fs.existsSync(outPath), 'output DPL file was not created');
+        const content = fs.readFileSync(outPath, 'utf-8');
+        assert.match(content, /IntegTestDp1/, 'filtered DP missing from export');
+        assert.ok(!content.includes('IntegTestDp2'), 'unexpected DP2 in filterDp export');
+    });
+
+    it('exports with localTime flag without error', async (t) => {
+        if (!handle) { t.skip(skipReason ?? 'fixture project not available'); return; }
+
+        const outPath = path.join(handle.projectDir, 'log', 'export-localtime.dpl');
+        const result = await exportDpl({
+            version: handle.version,
+            projectName: handle.projectName,
+            outputPath: outPath,
+            filterDpType: ['AsciiIntegTest'],
+            localTime: true,
+            managerNumber: MGR_NUM_EXPORT,
+        });
+
+        assert.equal(result.exitCode, 0, `export with localTime failed:\n${result.stderr}`);
+        assert.ok(fs.existsSync(outPath), 'output DPL file was not created');
+    });
+
+    it('exports with exportTimestamp flag without error', async (t) => {
+        if (!handle) { t.skip(skipReason ?? 'fixture project not available'); return; }
+
+        const outPath = path.join(handle.projectDir, 'log', 'export-timestamp.dpl');
+        const result = await exportDpl({
+            version: handle.version,
+            projectName: handle.projectName,
+            outputPath: outPath,
+            filterDpType: ['AsciiIntegTest'],
+            exportTimestamp: true,
+            managerNumber: MGR_NUM_EXPORT,
+        });
+
+        assert.equal(result.exitCode, 0, `export with exportTimestamp failed:\n${result.stderr}`);
+        assert.ok(fs.existsSync(outPath), 'output DPL file was not created');
+    });
+
+    it('imports with noVerbose flag (idempotent)', async (t) => {
+        if (!handle) { t.skip(skipReason ?? 'fixture project not available'); return; }
+
+        const result = await importDpl({
+            version: handle.version,
+            projectName: handle.projectName,
+            inputPath: FIXTURE_DPL,
+            typesAction: 'yes',
+            noVerbose: true,
+            managerNumber: MGR_NUM_IMPORT,
+        });
+
+        assert.ok(
+            result.exitCode === 0 || result.exitCode === 55 || result.exitCode === 56,
+            `import with noVerbose failed (exit ${result.exitCode}):\n${result.stderr}`,
+        );
+    });
+
     it('import is idempotent on second run', async (t) => {
         if (!handle) { t.skip(skipReason ?? 'fixture project not available'); return; }
 

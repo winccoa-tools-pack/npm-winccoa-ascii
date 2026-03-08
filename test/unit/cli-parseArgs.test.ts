@@ -114,6 +114,14 @@ describe('CLI parseArgs – import', () => {
             if (result.command === 'import') assert.equal(result.alwaysSendCommon, true);
         });
 
+        it('should parse --standalone flag', () => {
+            const result = parseArgs(
+                argv('import', 'data.dpl', '-v', '3.21', '-p', 'proj', '--standalone'),
+            );
+            assert.ok(result);
+            assert.equal(result.standalone, true);
+        });
+
         it('should parse shared --local-time flag', () => {
             const result = parseArgs(
                 argv('import', 'data.dpl', '-v', '3.21', '-p', 'proj', '--local-time'),
@@ -182,6 +190,7 @@ describe('CLI parseArgs – import', () => {
                     '--no-verbose',
                     '--inactivate-alert',
                     '--always-send-common',
+                    '--standalone',
                     '--local-time',
                     '-u',
                     'user',
@@ -200,6 +209,7 @@ describe('CLI parseArgs – import', () => {
                 assert.equal(result.inactivateAlert, true);
                 assert.equal(result.alwaysSendCommon, true);
             }
+            assert.equal(result.standalone, true);
             assert.equal(result.localTime, true);
             assert.equal(result.user, 'user');
             assert.equal(result.timeout, 180000);
@@ -448,6 +458,14 @@ describe('CLI parseArgs – export', () => {
             if (result.command === 'export') assert.equal(result.exportTimestamp, true);
         });
 
+        it('should parse --standalone flag', () => {
+            const result = parseArgs(
+                argv('export', 'out.dpl', '-v', '3.21', '-p', 'proj', '--standalone'),
+            );
+            assert.ok(result);
+            assert.equal(result.standalone, true);
+        });
+
         it('should parse all export flags together', () => {
             const result = parseArgs(
                 argv(
@@ -473,6 +491,7 @@ describe('CLI parseArgs – export', () => {
                     'de,en',
                     '--keep-system',
                     '--export-timestamp',
+                    '--standalone',
                     '--local-time',
                     '-t',
                     '300000',
@@ -491,6 +510,7 @@ describe('CLI parseArgs – export', () => {
                 assert.equal(result.keepSystem, true);
                 assert.equal(result.exportTimestamp, true);
             }
+            assert.equal(result.standalone, true);
             assert.equal(result.localTime, true);
             assert.equal(result.timeout, 300000);
         });

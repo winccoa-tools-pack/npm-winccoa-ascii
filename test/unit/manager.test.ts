@@ -184,6 +184,32 @@ describe('AsciiManager', () => {
             assert.ok(args.includes('-localTime'));
         });
 
+        it('should include -n flag when standalone is true', async () => {
+            const manager = new AsciiManager();
+            await manager.import({
+                version: '3.21',
+                inputPath: 'f.dpl',
+                configPath: '/cfg',
+                standalone: true,
+            });
+
+            const args = lastStartArgs();
+            assert.ok(args.includes('-n'), 'expected -n in args: ' + JSON.stringify(args));
+        });
+
+        it('should not include -n flag when standalone is false', async () => {
+            const manager = new AsciiManager();
+            await manager.import({
+                version: '3.21',
+                inputPath: 'f.dpl',
+                configPath: '/cfg',
+                standalone: false,
+            });
+
+            const args = lastStartArgs();
+            assert.ok(!args.includes('-n'));
+        });
+
         it('should return failure result when exitCode is non-zero', async () => {
             AsciiManagerComponent.prototype.start = mock.fn(
                 async () => 2,
@@ -326,6 +352,74 @@ describe('AsciiManager', () => {
 
             const args = lastStartArgs();
             assert.ok(args.includes('-exportTimestamp'));
+        });
+
+        it('should include -filterFile flag', async () => {
+            const manager = new AsciiManager();
+            await manager.export({
+                version: '3.21',
+                outputPath: 'out.dpl',
+                configPath: '/cfg',
+                filterFile: '/path/to/filter.txt',
+            });
+
+            const args = lastStartArgs();
+            assert.ok(args.includes('-filterFile'));
+            assert.equal(args[args.indexOf('-filterFile') + 1], '/path/to/filter.txt');
+        });
+
+        it('should include -younger flag', async () => {
+            const manager = new AsciiManager();
+            await manager.export({
+                version: '3.21',
+                outputPath: 'out.dpl',
+                configPath: '/cfg',
+                younger: '01.01.2024',
+            });
+
+            const args = lastStartArgs();
+            assert.ok(args.includes('-younger'));
+            assert.equal(args[args.indexOf('-younger') + 1], '01.01.2024');
+        });
+
+        it('should include -langList flag', async () => {
+            const manager = new AsciiManager();
+            await manager.export({
+                version: '3.21',
+                outputPath: 'out.dpl',
+                configPath: '/cfg',
+                langList: 'de,en',
+            });
+
+            const args = lastStartArgs();
+            assert.ok(args.includes('-langList'));
+            assert.equal(args[args.indexOf('-langList') + 1], 'de,en');
+        });
+
+        it('should include -n flag when standalone is true', async () => {
+            const manager = new AsciiManager();
+            await manager.export({
+                version: '3.21',
+                outputPath: 'out.dpl',
+                configPath: '/cfg',
+                standalone: true,
+            });
+
+            const args = lastStartArgs();
+            assert.ok(args.includes('-n'), 'expected -n in args: ' + JSON.stringify(args));
+        });
+
+        it('should not include -n flag when standalone is false', async () => {
+            const manager = new AsciiManager();
+            await manager.export({
+                version: '3.21',
+                outputPath: 'out.dpl',
+                configPath: '/cfg',
+                standalone: false,
+            });
+
+            const args = lastStartArgs();
+            assert.ok(!args.includes('-n'));
         });
 
         it('should return failure result when exitCode is non-zero', async () => {
