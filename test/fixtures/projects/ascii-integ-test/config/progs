@@ -1,0 +1,7 @@
+version 1
+
+auth "" ""
+#Manager         | Start  | SecKill | Restart# | ResetMin | Options
+WCCILpmon        | manual |      30 |        3 |        1 |
+WCCILdataSQLite  | always |      30 |        3 |        1 |
+WCCILevent       | always |      30 |        3 |        1 |

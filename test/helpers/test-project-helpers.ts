@@ -2,12 +2,12 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import type { TestContext } from 'node:test';
-import { ProjEnvProject } from '../../src/types/project/ProjEnvProject';
-import { PmonComponent } from '../../src/types/components/implementations/PmonComponent';
+import { ProjEnvProject } from '@winccoa-tools-pack/npm-winccoa-core';
+import { PmonComponent } from '@winccoa-tools-pack/npm-winccoa-core';
 import {
     getWinCCOAInstallationPathByVersion,
     getAvailableWinCCOAVersions,
-} from '../../src/utils/winccoa-paths';
+} from '@winccoa-tools-pack/npm-winccoa-core';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
