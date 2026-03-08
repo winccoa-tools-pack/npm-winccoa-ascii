@@ -24,5 +24,5 @@ test('CLI: "--help" prints usage and exits with code 1', () => {
     });
 
     assert.equal(result.status, 1);
-    assert.match(result.stderr ?? '', /Usage: winccoa-pnl-xml/);
+    assert.match(result.stderr ?? '', /Usage: winccoa-ascii/);
 });

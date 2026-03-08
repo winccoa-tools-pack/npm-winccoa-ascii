@@ -1,15 +1,22 @@
 /**
- * WinCC OA UI PNL/XML Converter
+ * WinCC OA ASCII Manager – DPL import & export
  *
- * Provides reliable PNL ⇄ XML transformations for WinCC OA UI panels
- * using the WCCOAui manager under the hood.
+ * Provides programmatic access to WCCOAascii for importing and exporting
+ * datapoint lists (DPL files) in WinCC OA projects.
  */
 
 // Types
-export { ConversionDirection, ConversionOptions, ConversionResult } from './types';
+export type {
+    AsciiBaseOptions,
+    DplImportOptions,
+    DplImportResult,
+    DplExportOptions,
+    DplExportResult,
+    AsciiOutputVersion,
+} from './types';
 
-// Core converter
-export { PnlXmlConverter } from './converter';
+// Core manager
+export { AsciiManager } from './manager';
 
 // Convenience API
-export { pnlToXml, xmlToPnl } from './api';
+export { importDpl, exportDpl } from './api';

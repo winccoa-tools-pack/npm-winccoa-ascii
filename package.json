@@ -1,7 +1,7 @@
 {
-  "name": "@winccoa-tools-pack/npm-winccoa-template",
-  "version": "0.2.0",
-  "description": "Template for WinCC OA npm packages",
+  "name": "@winccoa-tools-pack/npm-winccoa-ascii",
+  "version": "0.1.0",
+  "description": "WinCC OA ASCII Manager – DPL import & export wrapper",
   "author": "winccoa-tools-pack",
   "license": "MIT",
   "main": "dist/cjs/index.js",
@@ -25,7 +25,7 @@
     }
   },
   "bin": {
-    "winccoa-pnl-xml": "./dist/cjs/cli.js"
+    "winccoa-ascii": "./dist/cjs/cli.js"
   },
   "files": [
     "dist"

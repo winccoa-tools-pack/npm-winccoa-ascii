@@ -1,51 +1,55 @@
-import { PnlXmlConverter } from './converter';
-import { ConversionDirection, ConversionOptions, ConversionResult } from './types';
+import { AsciiManager } from './manager';
+import type { DplImportOptions, DplImportResult, DplExportOptions, DplExportResult } from './types';
 
 /**
- * Shared converter instance used by the convenience functions.
+ * Shared manager instance used by the convenience functions.
  */
-const converter = new PnlXmlConverter();
+const manager = new AsciiManager();
 
 /**
- * Convert a WinCC OA .pnl panel file (or directory of panels) to XML.
+ * Import a DPL file (or wildcard pattern) into a WinCC OA project.
  *
- * This is a convenience wrapper around {@link PnlXmlConverter.convert}
- * with the direction pre-set to PNL → XML.
+ * This is a convenience wrapper around {@link AsciiManager.import}
+ * using a shared singleton instance.
  *
- * @param options - Conversion options (version, inputPath, etc.)
- * @returns Conversion result
+ * @param options - Import options (version, inputPath, project reference, etc.)
+ * @returns Import result
  *
  * @example
  * ```ts
- * const result = await pnlToXml({
- *     version: '3.20',
- *     inputPath: 'panels/myPanel.pnl',
+ * const result = await importDpl({
+ *     version: '3.21',
+ *     configPath: '/path/to/project/config/config',
+ *     inputPath: '/path/to/data.dpl',
+ *     typesAction: 'yes',
  * });
  * console.log(result.success); // true
  * ```
  */
-export async function pnlToXml(options: ConversionOptions): Promise<ConversionResult> {
-    return converter.convert(options, ConversionDirection.PNL_TO_XML);
+export async function importDpl(options: DplImportOptions): Promise<DplImportResult> {
+    return manager.import(options);
 }
 
 /**
- * Convert a WinCC OA XML file (or directory of XML files) back to .pnl.
+ * Export datapoints from a WinCC OA project to a DPL file.
  *
- * This is a convenience wrapper around {@link PnlXmlConverter.convert}
- * with the direction pre-set to XML → PNL.
+ * This is a convenience wrapper around {@link AsciiManager.export}
+ * using a shared singleton instance.
  *
- * @param options - Conversion options (version, inputPath, etc.)
- * @returns Conversion result
+ * @param options - Export options (version, outputPath, project reference, filters, etc.)
+ * @returns Export result
  *
  * @example
  * ```ts
- * const result = await xmlToPnl({
- *     version: '3.20',
- *     inputPath: 'panels/myPanel.xml',
+ * const result = await exportDpl({
+ *     version: '3.21',
+ *     configPath: '/path/to/project/config/config',
+ *     outputPath: '/path/to/out.dpl',
+ *     filter: 'DP',
  * });
  * console.log(result.success); // true
  * ```
  */
-export async function xmlToPnl(options: ConversionOptions): Promise<ConversionResult> {
-    return converter.convert(options, ConversionDirection.XML_TO_PNL);
+export async function exportDpl(options: DplExportOptions): Promise<DplExportResult> {
+    return manager.export(options);
 }
