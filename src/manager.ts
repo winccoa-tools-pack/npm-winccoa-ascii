@@ -14,6 +14,20 @@ import type {
 const DEFAULT_TIMEOUT = 120_000;
 
 /**
+ * Corrected component class: the core package's `AsciiManagerComponent`
+ * returns `'WCCOAsciiMgr'` from `getName()`, but the actual binaries shipped
+ * with WinCC OA 3.x are named `WCCOAascii` (RAIMA) and `WCCOAasciiSQLite`
+ * (SQLite). We default to the SQLite variant which is used by most modern
+ * projects. Override `getExecutableName()` so that `getPath()` resolves the
+ * correct file.
+ */
+class WCCOAasciiComponent extends AsciiManagerComponent {
+    override getExecutableName(): string {
+        return 'WCCOAasciiSQLite';
+    }
+}
+
+/**
  * Wrapper around the WinCC OA ASCII Manager (`WCCOAascii`) for DPL import
  * and export operations.
  *
@@ -39,10 +53,10 @@ const DEFAULT_TIMEOUT = 120_000;
  * ```
  */
 export class AsciiManager {
-    private ascii: AsciiManagerComponent;
+    private ascii: WCCOAasciiComponent;
 
     constructor() {
-        this.ascii = new AsciiManagerComponent();
+        this.ascii = new WCCOAasciiComponent();
     }
 
     /**
@@ -57,6 +71,9 @@ export class AsciiManager {
         } else if (options.projectName) {
             args.push('-proj', options.projectName);
         }
+
+        // Enable log output to stderr so it is captured by the child process
+        args.push('-log', '+stderr');
 
         if (options.localTime) {
             args.push('-localTime');
