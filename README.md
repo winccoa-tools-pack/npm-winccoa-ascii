@@ -1,5 +1,7 @@
 # WinCC OA ASCII Manager — DPL Import & Export
 
+> **Not published to npm yet.** This package is still under development and has no release. Its API and contents may change before the first release. This notice is removed with the first release.
+
 A TypeScript library and CLI tool for SIMATIC WinCC Open Architecture projects that wraps the
 `WCCOAascii` / `WCCOAasciiSQLite` executable to import and export **Datapoint List (DPL)** files.
 
